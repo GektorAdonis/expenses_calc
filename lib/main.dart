@@ -89,6 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
           CupertinoTextField(
             controller: _kilometersController,
             keyboardType: TextInputType.number,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
             onChanged: (value) {
               kilometers = value.isEmpty ? 0.0 : double.parse(value);
             },
@@ -102,6 +105,9 @@ class _MyHomePageState extends State<MyHomePage> {
           CupertinoTextField(
             controller: _fuelPriceController,
             keyboardType: TextInputType.number,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
             onChanged: (value) {
               fuelPrice = value.isEmpty ? 0.0 : double.parse(value);
             },
@@ -115,6 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
           CupertinoTextField(
             controller: _exchangeRateController,
             keyboardType: TextInputType.number,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
             onChanged: (value) {
               euroRate = value.isEmpty ? 0.0 : double.parse(value);
             },
@@ -126,6 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             onPressed: () {
               calculateExpense();
+              FocusManager.instance.primaryFocus?.unfocus();
               showTotal();
             },
           ),
