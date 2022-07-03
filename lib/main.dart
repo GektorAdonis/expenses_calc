@@ -77,79 +77,82 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return CupertinoPageScaffold(
       backgroundColor: Colors.black,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          const Text(
-            "Введіть кілометраж",
-            style: TextStyle(
-              color: Colors.white,
-            ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: (() {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }),
+        child: SafeArea(
+          top: true,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const Text(
+                "Введіть кілометраж",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              CupertinoTextField(
+                controller: _kilometersController,
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  kilometers = value.isEmpty ? 0.0 : double.parse(value);
+                },
+              ),
+              const Text(
+                'Введіть ціну палива',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              CupertinoTextField(
+                controller: _fuelPriceController,
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  fuelPrice = value.isEmpty ? 0.0 : double.parse(value);
+                },
+              ),
+              const Text(
+                "Введіть курс євро",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              CupertinoTextField(
+                controller: _exchangeRateController,
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  euroRate = value.isEmpty ? 0.0 : double.parse(value);
+                },
+              ),
+              CupertinoButton(
+                color: Colors.greenAccent,
+                child: const Text(
+                  "Порахувати витрати",
+                ),
+                onPressed: () {
+                  calculateExpense();
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  showTotal();
+                },
+              ),
+              Container(
+                child: isTotalShown
+                    ? Text(
+                        "Витрати: " +
+                            (total.isNaN
+                                ? 0.toStringAsFixed(2)
+                                : total.toStringAsFixed(2)),
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
+                    : null,
+              ),
+            ],
           ),
-          CupertinoTextField(
-            controller: _kilometersController,
-            keyboardType: TextInputType.number,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            onChanged: (value) {
-              kilometers = value.isEmpty ? 0.0 : double.parse(value);
-            },
-          ),
-          const Text(
-            'Введіть ціну палива',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          CupertinoTextField(
-            controller: _fuelPriceController,
-            keyboardType: TextInputType.number,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            onChanged: (value) {
-              fuelPrice = value.isEmpty ? 0.0 : double.parse(value);
-            },
-          ),
-          const Text(
-            "Введіть курс євро",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          CupertinoTextField(
-            controller: _exchangeRateController,
-            keyboardType: TextInputType.number,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            onChanged: (value) {
-              euroRate = value.isEmpty ? 0.0 : double.parse(value);
-            },
-          ),
-          CupertinoButton(
-            color: Colors.greenAccent,
-            child: const Text(
-              "Порахувати витрати",
-            ),
-            onPressed: () {
-              calculateExpense();
-              FocusManager.instance.primaryFocus?.unfocus();
-              showTotal();
-            },
-          ),
-          Container(
-            child: isTotalShown
-                ? Text(
-                    "Витрати: " + total.toStringAsFixed(2),
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  )
-                : null,
-          ),
-        ],
+        ),
       ),
     );
   }
