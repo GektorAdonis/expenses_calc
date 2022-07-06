@@ -1,19 +1,24 @@
+import 'package:expense_calc/car_item.dart';
+import 'package:expense_calc/cars_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-class Adminscreen extends StatefulWidget {
-  const Adminscreen({Key? key}) : super(key: key);
+class AdminScreen extends StatefulWidget {
+  const AdminScreen({Key? key}) : super(key: key);
 
   @override
-  State<Adminscreen> createState() => _AdminscreenState();
+  State<AdminScreen> createState() => _AdminScreenState();
 }
 
-class _AdminscreenState extends State<Adminscreen> {
+class _AdminScreenState extends State<AdminScreen> {
   TextEditingController? _passwordController;
+  TextEditingController? _carNameController;
+  TextEditingController? _consumptionController;
+  List<CarItem> cars = [];
   String? enteredPassword;
   String password = "0";
+  String carName = "";
+  double consumption = 0.0;
   bool isLoggedIn = false;
   bool isPasswordWrong = false;
 
@@ -29,6 +34,59 @@ class _AdminscreenState extends State<Adminscreen> {
     }
   }
 
+  void showAddingCar() {
+    showCupertinoDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          //insetAnimationCurve: Curves.decelerate,
+          content: Column(
+            children: [
+              const Text("Введіть назву автомобіля"),
+              CupertinoTextField(
+                controller: _carNameController,
+                onChanged: (value) {
+                  carName = value;
+                },
+              ),
+              const Text("Введіть розхід пального"),
+              CupertinoTextField(
+                controller: _consumptionController,
+                onChanged: (value) {
+                  consumption = double.parse(value);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: addCar,
+              child: Text("Додати"),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Скасувати"),
+              isDestructiveAction: true,
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void addCar() {
+    setState(() {
+      cars.add(CarItem(
+        carName: carName,
+        consumption: consumption,
+      ));
+    });
+    print(carName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -40,14 +98,21 @@ class _AdminscreenState extends State<Adminscreen> {
         child: SafeArea(
           top: true,
           child: isLoggedIn
-              ? const Center(
-                  child: Text(
-                    "Logged in",
-                    style: TextStyle(
-                      color: Colors.white,
+              ? Center(
+                  child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CarsList(
+                      cars: cars,
                     ),
-                  ),
-                )
+                    CupertinoButton(
+                      child: const Text("Додати автомобіль"),
+                      onPressed: () {
+                        showAddingCar();
+                      },
+                    ),
+                  ],
+                ))
               : Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -64,7 +129,7 @@ class _AdminscreenState extends State<Adminscreen> {
                       },
                     ),
                     isPasswordWrong
-                        ? Text(
+                        ? const Text(
                             "Пароль неправильний, спробуйте ще раз",
                             style: TextStyle(
                               color: Colors.white,

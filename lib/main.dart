@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
             case 0:
               return CalculationScreen();
             case 1:
-              return Adminscreen();
+              return AdminScreen();
             default:
               return CalculationScreen();
           }
